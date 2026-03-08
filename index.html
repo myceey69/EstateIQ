@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>EstateIQ – Your Real Estate Assistant</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EstateIQ – Smart Real Estate Decisions</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
@@ -11,10 +11,51 @@
 </head>
 <body>
 
-  <!-- Toast container -->
+  <!-- ══ LOGIN SCREEN ══════════════════════════════════════════════════════ -->
+  <div id="loginScreen" class="loginScreen">
+    <div class="loginCard">
+      <div class="loginLogo">
+        <svg width="52" height="52" viewBox="0 0 48 48" fill="none">
+          <rect x="8" y="12" width="32" height="28" rx="3" stroke="white" stroke-width="2.5"/>
+          <path d="M24 4L40 16H8L24 4Z" fill="white" opacity="0.9"/>
+          <circle cx="20" cy="24" r="2" fill="white"/>
+          <circle cx="28" cy="24" r="2" fill="white"/>
+          <rect x="22" y="32" width="4" height="6" fill="white"/>
+        </svg>
+      </div>
+      <h1 class="loginTitle">EstateIQ</h1>
+      <p class="loginSub">AI-Powered Real Estate Assistant</p>
+
+      <div class="loginForm">
+        <div class="inputGroup">
+          <label class="inputLabel" for="loginEmail">Email</label>
+          <input type="email" id="loginEmail" class="textInput" placeholder="you@example.com" value="demo@estateiq.com" />
+        </div>
+        <div class="inputGroup">
+          <label class="inputLabel" for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" class="textInput" placeholder="Password" value="demo1234" />
+        </div>
+        <div id="loginError" class="loginError" style="display:none"></div>
+        <button id="loginBtn" class="btn btn--primary btn--full">
+          <span>Sign In</span> <span>→</span>
+        </button>
+        <p class="loginHint">Demo credentials are pre-filled — just click Sign In</p>
+      </div>
+
+      <div class="loginDivider"><span>or jump in as</span></div>
+
+      <div class="roleQuick">
+        <button class="roleQuickBtn" data-login-role="buyer">🏡 Buyer</button>
+        <button class="roleQuickBtn" data-login-role="investor">💼 Investor</button>
+        <button class="roleQuickBtn" data-login-role="agent">👤 Agent</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TOAST ══════════════════════════════════════════════════════════════ -->
   <div id="toastHost" class="toastHost" role="status" aria-live="polite" aria-atomic="true"></div>
 
-  <!-- Modal -->
+  <!-- ══ AI INSIGHT MODAL ════════════════════════════════════════════════════ -->
   <div id="modalBackdrop" class="modalBackdrop" aria-hidden="true">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
       <div class="modal__head">
@@ -22,32 +63,93 @@
           <div id="modalTitle" class="modal__title">AI Insight</div>
           <div id="modalSubtitle" class="modal__subtitle">Detailed Explanation</div>
         </div>
-        <button id="modalClose" class="iconBtn" aria-label="Close dialog">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
+        <button id="modalClose" class="iconBtn" aria-label="Close">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
           </svg>
         </button>
       </div>
       <div class="modal__body">
         <div id="modalKpis" class="kpiGrid"></div>
         <div class="divider"></div>
-        <div class="modal__text">
-          <div class="modal__sectionTitle">Why this matters</div>
-          <p id="modalWhy" class="muted"></p>
-          <div class="modal__sectionTitle">Next best actions</div>
-          <p id="modalNext" class="muted"></p>
-        </div>
+        <div class="modal__sectionTitle">Why this matters</div>
+        <p id="modalWhy" class="muted"></p>
+        <div class="modal__sectionTitle">Next best actions</div>
+        <p id="modalNext" class="muted"></p>
       </div>
     </div>
   </div>
 
-  <div class="app">
-    <!-- Sidebar -->
+  <!-- ══ ALERTS BOTTOM SHEET (from Flutter) ══════════════════════════════════ -->
+  <div id="alertsBackdrop" class="sheetBackdrop" aria-hidden="true">
+    <div class="bottomSheet" role="dialog" aria-modal="true" aria-label="Alerts">
+      <div class="sheet__handle"></div>
+      <div class="sheet__head">
+        <h3 class="sheet__title">Alerts</h3>
+        <button id="markAllReadBtn" class="textBtn">Mark all read</button>
+      </div>
+      <div class="divider"></div>
+      <div id="alertsList" class="alertsList"></div>
+    </div>
+  </div>
+
+  <!-- ══ ADVANCED FILTER PANEL (from Flutter) ════════════════════════════════ -->
+  <div id="filterBackdrop" class="sheetBackdrop" aria-hidden="true">
+    <div class="bottomSheet filterSheet" role="dialog" aria-modal="true" aria-label="Filters">
+      <div class="sheet__handle"></div>
+      <div class="sheet__head">
+        <h3 class="sheet__title">Filters</h3>
+        <button id="filterCloseBtn" class="textBtn">Done</button>
+      </div>
+      <div class="divider"></div>
+
+      <div class="filterSection">
+        <div class="filterSection__label">Price Range</div>
+        <div class="priceDisplay">
+          <span id="fpMin">$200K</span>
+          <span class="priceDash">—</span>
+          <span id="fpMax">$2.0M</span>
+        </div>
+        <input type="range" id="priceMinSlider" class="rangeSlider" min="200000" max="2000000" step="50000" value="200000" />
+        <input type="range" id="priceMaxSlider" class="rangeSlider" min="200000" max="2000000" step="50000" value="2000000" />
+      </div>
+
+      <div class="filterSection">
+        <div class="filterSection__label">Min Bedrooms</div>
+        <div class="chipRow" id="bedsChips">
+          <button class="filterChip active" data-beds="0">Any</button>
+          <button class="filterChip" data-beds="1">1+</button>
+          <button class="filterChip" data-beds="2">2+</button>
+          <button class="filterChip" data-beds="3">3+</button>
+          <button class="filterChip" data-beds="4">4+</button>
+        </div>
+      </div>
+
+      <div class="filterSection">
+        <div class="filterSection__label">Risk Level</div>
+        <div class="chipRow" id="riskChips">
+          <button class="filterChip active" data-risk="All">All</button>
+          <button class="filterChip" data-risk="Low">Low Risk</button>
+          <button class="filterChip" data-risk="Medium">Medium Risk</button>
+        </div>
+      </div>
+
+      <div class="filterActions">
+        <button id="filterResetBtn" class="btn">Reset</button>
+        <button id="filterApplyBtn" class="btn btn--primary">Apply</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MAIN APP SHELL ════════════════════════════════════════════════════ -->
+  <div id="appShell" class="app" style="display:none">
+
+    <!-- SIDEBAR (desktop) -->
     <aside class="sidebar">
+
       <div class="brand">
-        <div class="logo" aria-hidden="true">
-          <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <div class="logo">
+          <svg width="44" height="44" viewBox="0 0 48 48" fill="none">
             <rect x="8" y="12" width="32" height="28" rx="3" stroke="white" stroke-width="2.5"/>
             <path d="M24 4L40 16H8L24 4Z" fill="white" opacity="0.9"/>
             <circle cx="20" cy="24" r="2" fill="white"/>
@@ -57,40 +159,44 @@
         </div>
         <div>
           <div class="brand__name">EstateIQ</div>
-          <div class="brand__sub">Your Real Estate Assistant</div>
+          <div class="brand__sub">Smart Real Estate</div>
         </div>
       </div>
 
+      <!-- User greeting (from Flutter) -->
+      <div class="userGreeting">
+        <div class="userAvatar" id="sidebarAvatar">J</div>
+        <div>
+          <div class="userGreeting__name" id="sidebarName">Jane Doe</div>
+          <div class="userGreeting__plan" id="sidebarPlan">Free Plan</div>
+        </div>
+      </div>
+
+      <!-- Role selector -->
       <div class="roleCard">
         <div class="roleCard__title">I am a...</div>
-        <div class="segmented" role="tablist" aria-label="Select your role">
-          <button class="segBtn active" data-role="buyer" role="tab" aria-label="Home Buyer">
-            <span class="segBtn__icon">🏡</span>
-            <span>Buyer</span>
+        <div class="segmented" role="tablist">
+          <button class="segBtn active" data-role="buyer" role="tab">
+            <span class="segBtn__icon">🏡</span><span>Buyer</span>
           </button>
-          <button class="segBtn" data-role="investor" role="tab" aria-label="Property Investor">
-            <span class="segBtn__icon">💼</span>
-            <span>Investor</span>
+          <button class="segBtn" data-role="investor" role="tab">
+            <span class="segBtn__icon">💼</span><span>Investor</span>
           </button>
-          <button class="segBtn" data-role="agent" role="tab" aria-label="Real Estate Agent">
-            <span class="segBtn__icon">👤</span>
-            <span>Agent</span>
+          <button class="segBtn" data-role="agent" role="tab">
+            <span class="segBtn__icon">👤</span><span>Agent</span>
           </button>
         </div>
-
-        <div class="roleCard__meta" id="roleMeta">
-          As a Buyer: We'll help you find homes at fair prices in neighborhoods that match your lifestyle.
-        </div>
+        <div class="roleCard__meta" id="roleMeta">Buyer: fair price, neighborhood fit, next steps.</div>
 
         <div class="divider"></div>
 
         <div class="toggleRow">
           <div>
-            <div class="toggleRow__label">Show Story Mode</div>
-            <div class="toggleRow__desc">See explanations for each step</div>
+            <div class="toggleRow__label">Story Mode</div>
+            <div class="toggleRow__desc">Step explanations</div>
           </div>
-          <button id="storyToggle" class="switch" aria-pressed="false" aria-label="Toggle story mode">
-            <span class="switch__knob" aria-hidden="true"></span>
+          <button id="storyToggle" class="switch" aria-pressed="false">
+            <span class="switch__knob"></span>
           </button>
         </div>
 
@@ -99,53 +205,50 @@
         <div class="toggleRow">
           <div>
             <div class="toggleRow__label">Guided Help</div>
-            <div class="toggleRow__desc">Suggests your next step</div>
+            <div class="toggleRow__desc">Suggests next step</div>
           </div>
-          <button id="guideToggle" class="switch on" aria-pressed="true" aria-label="Toggle guided help">
-            <span class="switch__knob" aria-hidden="true"></span>
+          <button id="guideToggle" class="switch on" aria-pressed="true">
+            <span class="switch__knob"></span>
           </button>
         </div>
       </div>
 
+      <!-- Navigation -->
       <nav class="nav" aria-label="Main navigation">
         <button class="navItem active" data-screen="home">
-          <span class="navItem__icon" aria-hidden="true">🏠</span>
-          <span class="navItem__text">Welcome</span>
+          <span class="navItem__icon">🏠</span><span class="navItem__text">Welcome</span>
         </button>
         <button class="navItem" data-screen="onboarding">
-          <span class="navItem__icon" aria-hidden="true">📝</span>
-          <span class="navItem__text">Get Started</span>
+          <span class="navItem__icon">📝</span><span class="navItem__text">Get Started</span>
         </button>
         <button class="navItem" data-screen="search">
-          <span class="navItem__icon" aria-hidden="true">🔍</span>
-          <span class="navItem__text">Find Properties</span>
+          <span class="navItem__icon">🔍</span><span class="navItem__text">Find Properties</span>
         </button>
         <button class="navItem" data-screen="details">
-          <span class="navItem__icon" aria-hidden="true">📋</span>
-          <span class="navItem__text">Property Details</span>
+          <span class="navItem__icon">📋</span><span class="navItem__text">Property Details</span>
         </button>
         <button class="navItem" data-screen="trends">
-          <span class="navItem__icon" aria-hidden="true">📈</span>
-          <span class="navItem__text">Price Trends</span>
+          <span class="navItem__icon">📈</span><span class="navItem__text">Market Trends</span>
         </button>
         <button class="navItem" data-screen="risk">
-          <span class="navItem__icon" aria-hidden="true">🛡️</span>
-          <span class="navItem__text">Risk Assessment</span>
+          <span class="navItem__icon">🛡️</span><span class="navItem__text">Risk &amp; ROI</span>
         </button>
-        <button class="navItem" data-screen="saved">
-          <span class="navItem__icon" aria-hidden="true">⭐</span>
-          <span class="navItem__text">Saved Properties</span>
+        <button class="navItem" data-screen="watchlist">
+          <span class="navItem__icon">⭐</span><span class="navItem__text">Watchlist</span>
+          <span class="navBadge" id="navWatchBadge" style="display:none">0</span>
         </button>
         <button class="navItem" data-screen="report">
-          <span class="navItem__icon" aria-hidden="true">📄</span>
-          <span class="navItem__text">Summary Report</span>
+          <span class="navItem__icon">📄</span><span class="navItem__text">Report</span>
         </button>
         <button class="navItem" data-screen="dashboard">
-          <span class="navItem__icon" aria-hidden="true">🏁</span>
-          <span class="navItem__text">Dashboard</span>
+          <span class="navItem__icon">🏁</span><span class="navItem__text">Dashboard</span>
+        </button>
+        <button class="navItem" data-screen="profile">
+          <span class="navItem__icon">👤</span><span class="navItem__text">Profile</span>
         </button>
       </nav>
 
+      <!-- Progress tracker -->
       <div class="progressCard">
         <div class="progressCard__row">
           <div class="progressCard__label">Your Progress</div>
@@ -154,617 +257,496 @@
         <div class="progressBar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
           <div class="progressBar__fill" id="progressFill" style="width:0%"></div>
         </div>
-        <div class="progressCard__hint" id="progressHint">Start with Welcome, then Get Started</div>
+        <div class="progressCard__hint" id="progressHint">Start with Welcome</div>
       </div>
 
-      <button id="resetBtn" class="btn btn--ghost">
-        <span aria-hidden="true">↺</span>
-        <span>Start Over</span>
+      <button id="logoutBtn" class="btn btn--ghost">
+        <span>↪</span><span>Sign Out</span>
       </button>
     </aside>
 
-    <!-- Main -->
+    <!-- MAIN CONTENT -->
     <main class="main">
+
+      <!-- Topbar -->
       <header class="topbar">
         <div>
           <h1 class="topbar__title" id="topTitle">Welcome</h1>
           <div class="topbar__sub" id="topSub">Your personalized real estate journey</div>
         </div>
-
         <div class="topActions">
           <button id="openInsightBtn" class="btn btn--primary">
-            <span aria-hidden="true">✨</span>
-            <span>Get AI Insights</span>
+            <span>✨</span><span>AI Insight</span>
           </button>
           <button id="nextBtn" class="btn">
-            <span>Next Step</span>
-            <span aria-hidden="true">→</span>
+            <span>Next</span><span>→</span>
+          </button>
+          <!-- Notification bell (from Flutter) -->
+          <div style="position:relative">
+            <button id="alertsBtn" class="iconBtn" aria-label="Alerts" title="View Alerts">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+              </svg>
+            </button>
+            <span id="notifBadge" class="notifBadge" style="display:none">0</span>
+          </div>
+          <!-- Watchlist bookmark (from Flutter) -->
+          <button id="watchlistTopBtn" class="iconBtn" aria-label="Watchlist" title="Watchlist">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+            </svg>
           </button>
         </div>
       </header>
 
-      <!-- Guided flow hint -->
+      <!-- Guide bar -->
       <div id="guideBar" class="guideBar">
         <div class="guideBar__left">
-          <div class="guideBar__icon" aria-hidden="true">💡</div>
+          <div class="guideBar__icon">💡</div>
           <div>
             <div class="guideBar__title">Suggested Next Step</div>
-            <div id="guideText" class="guideBar__text">Complete Get Started to personalize your recommendations.</div>
+            <div id="guideText" class="guideBar__text">Complete Get Started to personalize your results.</div>
           </div>
         </div>
-        <div class="guideBar__right">
-          <button id="guideGoBtn" class="btn btn--primary">Take Me There</button>
-        </div>
+        <button id="guideGoBtn" class="btn btn--primary">Take Me There</button>
       </div>
 
-      <!-- Storyboard overlay -->
-      <div id="storyBox" class="storyBox" role="complementary" aria-live="polite">
-        <div class="storyBox__title" id="storyTitle">About This Step</div>
+      <!-- Story box -->
+      <div id="storyBox" class="storyBox" aria-live="polite">
+        <div class="storyBox__title" id="storyTitle"></div>
         <div class="storyBox__text" id="storyText"></div>
         <div class="storyBox__tags" id="storyTags"></div>
       </div>
 
-      <!-- Screens -->
-      <section id="home" class="screen active" aria-label="Welcome Screen">
+      <!-- ──────────── SCREENS ──────────── -->
+
+      <!-- HOME -->
+      <section id="screen-home" class="screen active" aria-label="Welcome">
         <div class="grid">
           <div class="card hero">
             <div class="hero__badge">EstateIQ</div>
             <h2 class="hero__title">Make Smarter Real Estate Decisions</h2>
             <p class="hero__lead" id="homeLead">
-              We help you understand fair prices, find neighborhoods that fit your lifestyle, and know exactly what to do next—all without complex spreadsheets.
+              We help you understand fair prices, find neighborhoods that fit your lifestyle, and know exactly what to do next — without spreadsheets.
             </p>
-
             <div class="heroStats">
               <div class="stat">
-                <div class="stat__icon" aria-hidden="true">👤</div>
+                <div class="stat__icon">👤</div>
                 <div class="stat__val">Personalized</div>
-                <div class="stat__lbl">Based on your goals and budget</div>
+                <div class="stat__lbl">Based on your role &amp; budget</div>
               </div>
               <div class="stat">
-                <div class="stat__icon" aria-hidden="true">💬</div>
-                <div class="stat__val">Easy to Understand</div>
-                <div class="stat__lbl">Plain English explanations</div>
+                <div class="stat__icon">✨</div>
+                <div class="stat__val">AI-Powered</div>
+                <div class="stat__lbl">Smart insights &amp; valuations</div>
               </div>
               <div class="stat">
-                <div class="stat__icon" aria-hidden="true">⚖️</div>
-                <div class="stat__val">Compare Easily</div>
-                <div class="stat__lbl">Save and compare your favorites</div>
+                <div class="stat__icon">⚖️</div>
+                <div class="stat__val">Compare &amp; Decide</div>
+                <div class="stat__lbl">Watchlist, alerts &amp; reports</div>
               </div>
             </div>
-
             <div class="divider"></div>
-
             <div class="ctaRow">
               <button class="btn btn--primary btn--large" data-screen="onboarding">
-                <span>Get Started</span>
-                <span aria-hidden="true">→</span>
+                <span>Get Started</span><span>→</span>
               </button>
-              <button class="btn btn--large" data-screen="search">Skip to Browse Properties</button>
+              <button class="btn btn--large" data-screen="search">Browse Properties</button>
             </div>
           </div>
 
           <div class="card">
-            <h3 class="card__title">How EstateIQ Works</h3>
-            
+            <h3 class="card__title">How It Works</h3>
             <div class="stepList">
               <div class="stepItem">
                 <div class="stepItem__number">1</div>
-                <div class="stepItem__content">
+                <div>
                   <div class="stepItem__title">Tell Us About You</div>
-                  <div class="stepItem__desc">Share your budget and what you're looking for</div>
+                  <div class="stepItem__desc">Set your budget, priorities, and role</div>
                 </div>
               </div>
-              
               <div class="stepItem">
                 <div class="stepItem__number">2</div>
-                <div class="stepItem__content">
-                  <div class="stepItem__title">Browse Properties</div>
-                  <div class="stepItem__desc">See homes with AI-powered insights</div>
+                <div>
+                  <div class="stepItem__title">Browse &amp; Filter</div>
+                  <div class="stepItem__desc">AI-ranked listings, map pins, smart filters</div>
                 </div>
               </div>
-              
               <div class="stepItem">
                 <div class="stepItem__number">3</div>
-                <div class="stepItem__content">
-                  <div class="stepItem__title">Compare & Decide</div>
-                  <div class="stepItem__desc">Save favorites and get recommendations</div>
+                <div>
+                  <div class="stepItem__title">Analyze &amp; Compare</div>
+                  <div class="stepItem__desc">Valuation, trends, risk, ROI in plain English</div>
+                </div>
+              </div>
+              <div class="stepItem">
+                <div class="stepItem__number">4</div>
+                <div>
+                  <div class="stepItem__title">Watchlist &amp; Alerts</div>
+                  <div class="stepItem__desc">Save favorites, get price change alerts</div>
                 </div>
               </div>
             </div>
-
             <div class="divider"></div>
-
             <div class="helpBox">
-              <div class="helpBox__icon" aria-hidden="true">💡</div>
+              <div class="helpBox__icon">💡</div>
               <div class="helpBox__text">
-                <strong>Need Help?</strong><br>
-                Click "Get AI Insights" anytime for personalized guidance.
+                <strong>New in Patch 1:</strong> Watchlist alerts, ROI calculator, profile, advanced filters, and mobile-ready bottom nav.
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section id="onboarding" class="screen" aria-label="Get Started Screen">
+      <!-- ONBOARDING -->
+      <section id="screen-onboarding" class="screen" aria-label="Get Started">
         <div class="grid">
           <div class="card">
-            <h3 class="card__title">Let's Get Started</h3>
-            <p class="card__intro">Tell us a bit about what you're looking for so we can personalize your experience.</p>
-
+            <h3 class="card__title">Personalize Your Experience</h3>
+            <p class="card__intro">Answer 3 quick questions so we can rank properties for you.</p>
             <div class="wizard">
-              <div class="wizardSteps" role="tablist">
-                <button class="wizStep active" data-step="1" role="tab">1</button>
+              <div class="wizardSteps">
+                <button class="wizStep active" id="ws1">1</button>
                 <div class="wizLine"></div>
-                <button class="wizStep" data-step="2" role="tab">2</button>
+                <button class="wizStep" id="ws2">2</button>
                 <div class="wizLine"></div>
-                <button class="wizStep" data-step="3" role="tab">3</button>
+                <button class="wizStep" id="ws3">3</button>
               </div>
 
-              <!-- Step 1 -->
-              <div class="wizPanel active" data-panel="1">
+              <div id="wizPanel1" class="wizPanel active">
                 <h4 class="wizTitle">Step 1: Your Budget</h4>
-                <p class="wizDesc">What's your comfortable price range?</p>
-
+                <p class="wizDesc">Drag to set your maximum price.</p>
                 <div class="inputGroup">
                   <label for="budgetInput" class="inputLabel">Maximum Budget</label>
                   <div class="budgetDisplay">
-                    <input type="range" id="budgetInput" class="budgetSlider" 
-                           min="500000" max="2000000" step="50000" value="850000"
-                           aria-label="Budget slider">
+                    <input type="range" id="budgetInput" class="budgetSlider" min="500000" max="2000000" step="50000" value="850000" />
                     <div class="budgetValue" id="budgetValue">$850,000</div>
                   </div>
                 </div>
-
                 <div class="wizActions">
-                  <button class="btn btn--primary btn--large" data-wiznext="2">
-                    <span>Next: What You Want</span>
-                    <span aria-hidden="true">→</span>
+                  <button class="btn btn--primary btn--large" id="wizNext1">
+                    <span>Next: Priorities</span><span>→</span>
                   </button>
                 </div>
               </div>
 
-              <!-- Step 2 -->
-              <div class="wizPanel" data-panel="2">
-                <h4 class="wizTitle">Step 2: Your Must-Haves</h4>
-                <p class="wizDesc">Select what's most important to you (choose all that apply)</p>
-
+              <div id="wizPanel2" class="wizPanel">
+                <h4 class="wizTitle">Step 2: Your Priorities</h4>
+                <p class="wizDesc">Select everything that matters most (choose all that apply).</p>
                 <div class="prefGrid">
-                  <button class="prefTile" data-pref="good-schools">
-                    <span class="prefTile__icon" aria-hidden="true">🎓</span>
-                    <span class="prefTile__text">Great Schools</span>
-                  </button>
-                  <button class="prefTile" data-pref="low-commute">
-                    <span class="prefTile__icon" aria-hidden="true">🚗</span>
-                    <span class="prefTile__text">Short Commute</span>
-                  </button>
-                  <button class="prefTile" data-pref="safe">
-                    <span class="prefTile__icon" aria-hidden="true">🔒</span>
-                    <span class="prefTile__text">Safe Area</span>
-                  </button>
-                  <button class="prefTile" data-pref="amenities">
-                    <span class="prefTile__icon" aria-hidden="true">🏪</span>
-                    <span class="prefTile__text">Nearby Shops</span>
-                  </button>
-                  <button class="prefTile" data-pref="stable">
-                    <span class="prefTile__icon" aria-hidden="true">📊</span>
-                    <span class="prefTile__text">Stable Market</span>
-                  </button>
-                  <button class="prefTile" data-pref="growth">
-                    <span class="prefTile__icon" aria-hidden="true">📈</span>
-                    <span class="prefTile__text">Growth Potential</span>
-                  </button>
+                  <button class="prefTile" data-must="Great Schools"><span class="prefTile__icon">🎓</span><span class="prefTile__text">Great Schools</span></button>
+                  <button class="prefTile" data-must="Commute"><span class="prefTile__icon">🚗</span><span class="prefTile__text">Short Commute</span></button>
+                  <button class="prefTile" data-must="Safety"><span class="prefTile__icon">🔒</span><span class="prefTile__text">Safe Area</span></button>
+                  <button class="prefTile" data-must="Amenities"><span class="prefTile__icon">🏪</span><span class="prefTile__text">Amenities</span></button>
+                  <button class="prefTile" data-must="Stability"><span class="prefTile__icon">📊</span><span class="prefTile__text">Stable Market</span></button>
+                  <button class="prefTile" data-must="High ROI"><span class="prefTile__icon">📈</span><span class="prefTile__text">High ROI</span></button>
                 </div>
-
                 <div class="wizActions">
-                  <button class="btn" data-wizback="1">
-                    <span aria-hidden="true">←</span>
-                    <span>Back</span>
-                  </button>
-                  <button class="btn btn--primary btn--large" data-wiznext="3">
-                    <span>Next: Review</span>
-                    <span aria-hidden="true">→</span>
-                  </button>
+                  <button class="btn" id="wizBack2"><span>←</span><span>Back</span></button>
+                  <button class="btn btn--primary btn--large" id="wizNext2"><span>Next: Review</span><span>→</span></button>
                 </div>
               </div>
 
-              <!-- Step 3 -->
-              <div class="wizPanel" data-panel="3">
-                <h4 class="wizTitle">Step 3: Confirm Your Preferences</h4>
-                <p class="wizDesc">Here's what we learned about you</p>
-
+              <div id="wizPanel3" class="wizPanel">
+                <h4 class="wizTitle">Step 3: Confirm Your Profile</h4>
+                <p class="wizDesc">Here's what we know about you.</p>
                 <div class="prefBox">
-                  <div class="prefRow">
-                    <span class="prefLabel">Your Role</span>
-                    <span class="prefVal" id="prefRole">Buyer</span>
-                  </div>
-                  <div class="prefRow">
-                    <span class="prefLabel">Budget</span>
-                    <span class="prefVal" id="prefBudget">$850,000</span>
-                  </div>
-                  <div class="prefRow">
-                    <span class="prefLabel">Priorities</span>
-                    <span class="prefVal" id="prefMust">Not selected yet</span>
-                  </div>
+                  <div class="prefRow"><span class="prefLabel">Role</span><span class="prefVal" id="prefRole">Buyer</span></div>
+                  <div class="prefRow"><span class="prefLabel">Budget</span><span class="prefVal" id="prefBudget">$850,000</span></div>
+                  <div class="prefRow"><span class="prefLabel">Priorities</span><span class="prefVal" id="prefMust">None selected</span></div>
                 </div>
-
                 <div class="wizActions">
-                  <button class="btn" data-wizback="2">
-                    <span aria-hidden="true">←</span>
-                    <span>Back</span>
-                  </button>
-                  <button class="btn btn--primary btn--large" id="completeOnboard" data-screen="search">
-                    <span aria-hidden="true">✓</span>
-                    <span>Complete & Start Searching</span>
+                  <button class="btn" id="wizBack3"><span>←</span><span>Back</span></button>
+                  <button class="btn btn--primary btn--large" id="wizFinish">
+                    <span>✓</span><span>Start Searching</span>
                   </button>
                 </div>
               </div>
             </div>
           </div>
-
           <div class="card sticky">
             <h3 class="card__title">Why We Ask</h3>
             <div class="infoText">
-              <p><strong>Your budget</strong> helps us show you properties in your price range.</p>
-              <p><strong>Your must-haves</strong> let us highlight properties that match what matters most to you.</p>
-              <p>Don't worry—you can change these anytime from your dashboard.</p>
+              <p><strong>Budget</strong> filters and ranks listings so you see the best matches first.</p>
+              <p><strong>Priorities</strong> shape the AI score — e.g. "Safe Area" boosts properties with high safety ratings.</p>
+              <p><strong>Role</strong> changes what insights appear — buyer, investor, and agent views are all different.</p>
+              <p>You can update these anytime from your Profile.</p>
             </div>
           </div>
         </div>
       </section>
 
-      <section id="search" class="screen" aria-label="Find Properties Screen">
+      <!-- SEARCH -->
+      <section id="screen-search" class="screen" aria-label="Find Properties">
         <div class="grid grid--wide">
           <div class="card">
             <h3 class="card__title">Find Your Perfect Property</h3>
-            
+
             <div class="searchRow">
               <div class="searchBox">
-                <label for="searchInput" class="visuallyHidden">Search properties</label>
                 <svg class="searchIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <path d="m21 21-4.35-4.35"></path>
+                  <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
                 </svg>
-                <input type="text" id="searchInput" class="searchInput" placeholder="Search by neighborhood or property type..." aria-label="Search properties">
+                <input type="text" id="searchInput" class="searchInput" placeholder="Search by name, area, or type…" />
               </div>
-              
-              <div class="filterBtns">
-                <button class="filterBtn active" data-filter="all">All</button>
-                <button class="filterBtn" data-filter="undervalued">Good Deal</button>
-                <button class="filterBtn" data-filter="high-growth">High Growth</button>
-                <button class="filterBtn" data-filter="low-risk">Low Risk</button>
+              <div class="filterRow">
+                <div class="signalChips">
+                  <button class="chip active" data-filter="All">All</button>
+                  <button class="chip" data-filter="Low Risk">Low Risk</button>
+                  <button class="chip" data-filter="High Growth">High Growth</button>
+                  <button class="chip" data-filter="Best ROI">Best ROI</button>
+                  <button class="chip" data-filter="Undervalued">Undervalued</button>
+                  <button class="chip" data-filter="Emerging">Emerging</button>
+                </div>
+                <button id="advFilterBtn" class="tuneBtn" title="Advanced Filters">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/>
+                  </svg>
+                </button>
               </div>
             </div>
 
-            <div class="divider"></div>
+            <div id="filterSummaryBar" class="filterSummaryBar" style="display:none"></div>
 
             <!-- Map -->
             <div class="map" role="img" aria-label="Property map">
               <div class="map__grid" aria-hidden="true"></div>
               <div class="map__pins" id="mapPins"></div>
               <div class="map__legend">
-                <span class="legendItem">
-                  <span class="legendDot legendDot--good" aria-hidden="true"></span>
-                  <span>Low Risk</span>
-                </span>
-                <span class="legendItem">
-                  <span class="legendDot legendDot--warn" aria-hidden="true"></span>
-                  <span>Medium Risk</span>
-                </span>
-                <span class="legendItem">
-                  <span class="legendDot legendDot--bad" aria-hidden="true"></span>
-                  <span>Higher Risk</span>
-                </span>
+                <span class="legendItem"><span class="legendDot legendDot--good"></span><span>Low Risk</span></span>
+                <span class="legendItem"><span class="legendDot legendDot--warn"></span><span>Medium Risk</span></span>
+                <span class="legendItem"><span class="legendDot legendDot--bad"></span><span>High Risk</span></span>
               </div>
             </div>
 
             <div class="divider"></div>
-
-            <!-- Property list -->
-            <div class="propList" id="propList"></div>
+            <div id="searchSummary" class="searchSummary"></div>
+            <div class="divider"></div>
+            <div id="resultsList" class="propList"></div>
 
             <div class="ctaRow">
-              <button class="btn" data-screen="onboarding">
-                <span aria-hidden="true">←</span>
-                <span>Back to Setup</span>
-              </button>
-              <button class="btn btn--primary" data-screen="details">
-                <span>View Selected Property</span>
-                <span aria-hidden="true">→</span>
-              </button>
+              <button id="clearSearchBtn" class="btn"><span>✕</span><span>Clear</span></button>
+              <button class="btn btn--primary" data-screen="details"><span>View Selected</span><span>→</span></button>
             </div>
           </div>
 
           <div class="card sticky">
             <h3 class="card__title">Selected Property</h3>
-            <div id="searchDetail" class="detailBox">
-              Click on a property to see more details
+            <div class="miniKpis">
+              <div class="miniKpi"><span class="miniKpi__lbl">Signal</span><span class="miniKpi__val" id="mkSignal">—</span></div>
+              <div class="miniKpi"><span class="miniKpi__lbl">Risk</span><span class="miniKpi__val" id="mkRisk">—</span></div>
+              <div class="miniKpi"><span class="miniKpi__lbl">Growth</span><span class="miniKpi__val" id="mkGrowth">—</span></div>
+              <div class="miniKpi"><span class="miniKpi__lbl">Cap Rate</span><span class="miniKpi__val" id="mkCap">—</span></div>
             </div>
+            <div class="divider"></div>
+            <div id="searchDetail" class="infoText muted">Click any property or map pin to preview it here.</div>
           </div>
         </div>
       </section>
 
-      <section id="details" class="screen" aria-label="Property Details Screen">
+      <!-- DETAILS -->
+      <section id="screen-details" class="screen" aria-label="Property Details">
         <div class="grid">
           <div class="card">
             <h3 class="card__title">Property Details</h3>
-
             <div class="propHeader">
               <div>
-                <h4 class="propHeader__title" id="detTitle">Select a property to view</h4>
-                <div class="propHeader__meta" id="detMeta">—</div>
+                <h4 class="propHeader__title" id="detailTitle">Select a property from Search</h4>
+                <div class="propHeader__meta" id="detailMeta">—</div>
               </div>
-              <button class="btn btn--save" id="saveBtn" disabled>
-                <span aria-hidden="true">⭐</span>
-                <span>Save Property</span>
-              </button>
-            </div>
-
-            <div class="divider"></div>
-
-            <div class="kpiRow">
-              <div class="kpiTile">
-                <div class="kpiTile__label">Listing Price</div>
-                <div class="kpiTile__val" id="detPrice">$—</div>
-              </div>
-              <div class="kpiTile">
-                <div class="kpiTile__label">AI Fair Value</div>
-                <div class="kpiTile__val good" id="detRange">$—</div>
-              </div>
-              <div class="kpiTile">
-                <div class="kpiTile__label">Market Signal</div>
-                <div class="kpiTile__val" id="detSignal">—</div>
+              <div class="propActions">
+                <button class="btn btn--save" id="watchlistBtn" disabled><span>⭐</span><span>Watchlist</span></button>
+                <button class="btn" id="shareBtn" disabled><span>📤</span><span>Share</span></button>
               </div>
             </div>
-
             <div class="divider"></div>
-
+            <div class="kpiRow kpiRow--4">
+              <div class="kpiTile"><div class="kpiTile__label">Listing Price</div><div class="kpiTile__val" id="detailPrice">$—</div></div>
+              <div class="kpiTile"><div class="kpiTile__label">AI Fair Range</div><div class="kpiTile__val good" id="detailFairRange">$—</div></div>
+              <div class="kpiTile"><div class="kpiTile__label">Signal</div><div class="kpiTile__val" id="detailSignal">—</div></div>
+              <div class="kpiTile"><div class="kpiTile__label">Cap Rate</div><div class="kpiTile__val" id="detailCapRate">—</div></div>
+            </div>
+            <div class="divider"></div>
             <h4 class="subsectionTitle">Neighborhood Scores</h4>
-            <div class="scoreGrid" id="detScores"></div>
-
+            <div id="nhBars" class="nhBars"></div>
             <div class="divider"></div>
-
+            <div class="nextBox">
+              <span class="nextBox__lbl">Recommended Next Step:</span>
+              <span class="nextBox__val" id="detailNext">—</span>
+            </div>
             <div class="ctaRow">
-              <button class="btn" data-screen="search">
-                <span aria-hidden="true">←</span>
-                <span>Back to Search</span>
-              </button>
-              <button class="btn btn--primary" data-screen="trends">
-                <span>See Price Trends</span>
-                <span aria-hidden="true">→</span>
-              </button>
+              <button class="btn" data-screen="search"><span>←</span><span>Back</span></button>
+              <button class="btn btn--primary" data-screen="trends"><span>See Trends</span><span>→</span></button>
             </div>
           </div>
-
           <div class="card sticky">
             <h3 class="card__title">What This Means</h3>
-            <div id="detExplain" class="infoText">
-              Select a property to see personalized insights
-            </div>
+            <div id="detailExplain" class="infoText">Select a property to see personalized insights.</div>
             <div class="divider"></div>
-            <button class="btn btn--primary" id="detInsightBtn">
-              <span aria-hidden="true">✨</span>
-              <span>Get AI Analysis</span>
-            </button>
+            <button class="btn btn--primary" id="detInsightBtn"><span>✨</span><span>AI Analysis</span></button>
           </div>
         </div>
       </section>
 
-      <section id="trends" class="screen" aria-label="Price Trends Screen">
+      <!-- TRENDS -->
+      <section id="screen-trends" class="screen" aria-label="Market Trends">
         <div class="grid">
           <div class="card">
-            <h3 class="card__title">Price Trends & Forecast</h3>
-            <p class="card__intro">See how prices have changed and what we predict for the future</p>
-
-            <div class="trendViz" id="trendBox"></div>
-
+            <h3 class="card__title">Price Trends &amp; Forecast</h3>
+            <p class="card__intro">Understand market timing and price direction for your selected property.</p>
+            <div id="trendRoleLine" class="trendRoleLine"></div>
+            <div id="trendChart" class="trendChart"></div>
             <div class="divider"></div>
-
-            <div class="ctaRow">
-              <button class="btn" data-screen="details">
-                <span aria-hidden="true">←</span>
-                <span>Back to Details</span>
-              </button>
-              <button class="btn btn--primary" data-screen="risk">
-                <span>Check Risk Level</span>
-                <span aria-hidden="true">→</span>
-              </button>
-            </div>
-          </div>
-
-          <div class="card sticky">
-            <h3 class="card__title">Understanding the Trends</h3>
-            <div id="trendExplain" class="infoText">
-              Select a property to see trend analysis
-            </div>
-            <div class="divider"></div>
-            <button class="btn btn--primary" id="trendInsightBtn">
-              <span aria-hidden="true">✨</span>
-              <span>Explain This Forecast</span>
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <section id="risk" class="screen" aria-label="Risk Assessment Screen">
-        <div class="grid">
-          <div class="card">
-            <h3 class="card__title">Risk & Return Analysis</h3>
-            <p class="card__intro">Understand the risks and potential returns of this property</p>
-
-            <div class="divider"></div>
-
             <div class="kpiRow">
-              <div class="kpiTile kpiTile--large">
-                <div class="kpiTile__label">Overall Risk</div>
-                <div class="kpiTile__val" id="riskLevel">—</div>
-              </div>
-              <div class="kpiTile kpiTile--large">
-                <div class="kpiTile__label">Potential ROI</div>
-                <div class="kpiTile__val" id="roiHint">—</div>
-              </div>
-              <div class="kpiTile kpiTile--large">
-                <div class="kpiTile__label">Our Recommendation</div>
-                <div class="kpiTile__val" id="riskAction">—</div>
-              </div>
+              <div class="kpiTile"><div class="kpiTile__label">12-mo Trend</div><div class="kpiTile__val good" id="trendPct">+3.2%</div></div>
+              <div class="kpiTile"><div class="kpiTile__label">Confidence</div><div class="kpiTile__val" id="trendConf">Medium</div></div>
+              <div class="kpiTile"><div class="kpiTile__label">Inventory</div><div class="kpiTile__val" id="trendInv">Tight</div></div>
             </div>
-
-            <div class="divider"></div>
-
-            <div class="riskNotes" id="riskExplain">
-              Select a property to see risk assessment
-            </div>
-
-            <div class="divider"></div>
-
             <div class="ctaRow">
-              <button class="btn" data-screen="trends">
-                <span aria-hidden="true">←</span>
-                <span>Back to Trends</span>
-              </button>
-              <button class="btn" data-screen="saved">Saved Properties</button>
-              <button class="btn btn--primary" data-screen="report">
-                <span>See Full Report</span>
-                <span aria-hidden="true">→</span>
-              </button>
+              <button class="btn" data-screen="details"><span>←</span><span>Back</span></button>
+              <button class="btn btn--primary" data-screen="risk"><span>Check Risk</span><span>→</span></button>
             </div>
           </div>
-
           <div class="card sticky">
-            <h3 class="card__title">Detailed Risk Analysis</h3>
-            <p class="infoText">Get a comprehensive breakdown of all risk factors and what they mean for you</p>
+            <h3 class="card__title">Trend Explanation</h3>
+            <div id="trendExplain" class="infoText">Select a property to see a role-based trend explanation.</div>
             <div class="divider"></div>
-            <button class="btn btn--primary" id="riskInsightBtn">
-              <span aria-hidden="true">✨</span>
-              <span>Full Risk Assessment</span>
-            </button>
+            <button class="btn btn--primary" id="trendInsightBtn"><span>✨</span><span>Explain Forecast</span></button>
           </div>
         </div>
       </section>
 
-      <section id="saved" class="screen" aria-label="Saved Properties Screen">
+      <!-- RISK & ROI -->
+      <section id="screen-risk" class="screen" aria-label="Risk and ROI">
         <div class="grid">
           <div class="card">
-            <h3 class="card__title">Your Saved Properties</h3>
-            <p class="card__intro">Compare your favorite properties to make the best decision</p>
-
+            <h3 class="card__title">Risk &amp; Return Analysis</h3>
+            <p class="card__intro">Understand risk factors and potential returns for this property.</p>
+            <div class="kpiRow">
+              <div class="kpiTile kpiTile--large"><div class="kpiTile__label">Overall Risk</div><div class="kpiTile__val" id="riskLevel">—</div></div>
+              <div class="kpiTile kpiTile--large"><div class="kpiTile__label">Potential ROI</div><div class="kpiTile__val" id="roiHint">—</div></div>
+              <div class="kpiTile kpiTile--large"><div class="kpiTile__label">Recommendation</div><div class="kpiTile__val" id="riskAction">—</div></div>
+            </div>
+            <div class="divider"></div>
+            <div id="riskExplain" class="infoText">Select a property to see a risk assessment.</div>
             <div class="divider"></div>
 
-            <div class="list" id="savedList"></div>
-
-            <div class="divider"></div>
+            <!-- ROI Calculator (from Flutter app concept) -->
+            <div class="roiCalc">
+              <h4 class="roiCalc__title">📐 Quick ROI Calculator</h4>
+              <p class="roiCalc__desc">Estimate returns for the selected property.</p>
+              <div class="roiCalcRow">
+                <div class="roiCalcItem">
+                  <label class="inputLabel" for="roiRent">Monthly Rent ($)</label>
+                  <input type="number" id="roiRent" class="roiInput" value="3500" min="500" max="30000" step="100" />
+                </div>
+                <div class="roiCalcItem">
+                  <label class="inputLabel" for="roiExpenses">Annual Expenses ($)</label>
+                  <input type="number" id="roiExpenses" class="roiInput" value="8000" min="0" max="200000" step="500" />
+                </div>
+              </div>
+              <div id="roiResult" class="roiResult"></div>
+            </div>
 
             <div class="ctaRow">
-              <button class="btn" data-screen="search">
-                <span aria-hidden="true">🔍</span>
-                <span>Find More Properties</span>
-              </button>
-              <button class="btn btn--primary" id="compareBtn" disabled>
-                <span aria-hidden="true">⚖️</span>
-                <span>Compare Top 2</span>
-              </button>
+              <button class="btn" data-screen="trends"><span>←</span><span>Back</span></button>
+              <button class="btn btn--primary" data-screen="watchlist"><span>Watchlist</span><span>→</span></button>
             </div>
           </div>
-
           <div class="card sticky">
-            <h3 class="card__title">Comparison</h3>
-            <div id="compareBox" class="infoText">
-              Save at least 2 properties to compare them side-by-side
-            </div>
+            <h3 class="card__title">Risk Breakdown</h3>
+            <div id="riskBreakdown" class="infoText">Select a property to see a detailed risk breakdown.</div>
+            <div class="divider"></div>
+            <button class="btn btn--primary" id="riskInsightBtn"><span>✨</span><span>Full Risk Assessment</span></button>
           </div>
         </div>
       </section>
 
-      <section id="report" class="screen" aria-label="Summary Report Screen">
+      <!-- WATCHLIST (combined Saved from web + Watchlist alerts from Flutter) -->
+      <section id="screen-watchlist" class="screen" aria-label="Watchlist">
+        <div class="grid">
+          <div class="card">
+            <h3 class="card__title">Your Watchlist</h3>
+            <p class="card__intro">Save properties and receive price change &amp; market shift alerts.</p>
+            <div class="divider"></div>
+            <div id="watchlistList" class="propList"></div>
+            <div class="divider"></div>
+            <div class="ctaRow">
+              <button class="btn" data-screen="search"><span>🔍</span><span>Find More</span></button>
+              <button class="btn btn--primary" id="compareBtn" disabled><span>⚖️</span><span>Compare Top 2</span></button>
+            </div>
+          </div>
+          <div class="card sticky">
+            <h3 class="card__title">Side-by-Side Compare</h3>
+            <div id="compareBox" class="infoText">Save at least 2 properties to compare them side-by-side.</div>
+            <div class="divider"></div>
+            <h4 style="font-family:var(--font-display);font-size:16px;color:var(--text);margin:0 0 12px">Recent Alerts</h4>
+            <div id="alertsInlineList" class="alertsInline"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- REPORT -->
+      <section id="screen-report" class="screen" aria-label="Report">
         <div class="grid">
           <div class="card">
             <h3 class="card__title">Property Summary Report</h3>
-            <p class="card__intro">A comprehensive overview you can save or share</p>
-
+            <p class="card__intro">A shareable one-page summary. Switch your role in the sidebar to see different views.</p>
             <div class="divider"></div>
-
             <div class="report">
               <div class="report__head">
                 <div>
                   <h4 class="report__title" id="repTitle">Select a property</h4>
                   <div class="report__meta" id="repMeta">—</div>
                 </div>
-                <div class="report__badge" id="repRole">Buyer Report</div>
+                <div class="report__badge" id="repRole">Buyer Brief</div>
               </div>
-
               <div class="report__grid">
-                <div class="reportCard">
-                  <div class="reportCard__label">Listing Price</div>
-                  <div class="reportCard__val" id="repPrice">$—</div>
-                </div>
-                <div class="reportCard">
-                  <div class="reportCard__label">AI Fair Range</div>
-                  <div class="reportCard__val" id="repRange">$—</div>
-                </div>
-                <div class="reportCard">
-                  <div class="reportCard__label">Signal</div>
-                  <div class="reportCard__val" id="repSignal">—</div>
-                </div>
-                <div class="reportCard">
-                  <div class="reportCard__label">Risk</div>
-                  <div class="reportCard__val" id="repRisk">—</div>
-                </div>
+                <div class="reportCard"><div class="reportCard__label">Listing Price</div><div class="reportCard__val" id="repPrice">$—</div></div>
+                <div class="reportCard"><div class="reportCard__label">AI Fair Range</div><div class="reportCard__val" id="repRange">$—</div></div>
+                <div class="reportCard"><div class="reportCard__label">Signal</div><div class="reportCard__val" id="repSignal">—</div></div>
+                <div class="reportCard"><div class="reportCard__label">Risk</div><div class="reportCard__val" id="repRisk">—</div></div>
               </div>
-
               <div class="divider"></div>
-
               <div class="report__section">
                 <h5 class="report__sectionTitle">Summary</h5>
-                <div class="report__text" id="repNarrative">Select a property to generate a summary</div>
+                <div id="repNarrative" class="report__text">Select a property to generate a report.</div>
               </div>
-
               <div class="divider"></div>
-
               <div class="report__section">
                 <h5 class="report__sectionTitle">Recommended Next Steps</h5>
-                <ol class="reportList" id="repActions"></ol>
+                <ol id="repActions" class="reportList"></ol>
               </div>
             </div>
-
-            <div class="divider"></div>
-
             <div class="ctaRow">
-              <button class="btn" data-screen="risk">
-                <span aria-hidden="true">←</span>
-                <span>Back</span>
-              </button>
-              <button class="btn" data-screen="saved">Saved Properties</button>
-              <button class="btn btn--primary" data-screen="dashboard">
-                <span>Go to Dashboard</span>
-                <span aria-hidden="true">→</span>
-              </button>
+              <button class="btn" data-screen="risk"><span>←</span><span>Back</span></button>
+              <button class="btn btn--primary" id="exportBtn"><span>📄</span><span>Export PDF</span></button>
+              <button class="btn btn--primary" data-screen="dashboard"><span>Dashboard</span><span>→</span></button>
             </div>
           </div>
-
           <div class="card sticky">
-            <h3 class="card__title">Export Report</h3>
-            <p class="infoText">Save this report to share with family, friends, or your real estate agent</p>
-            <div class="divider"></div>
-            <button class="btn btn--primary" id="exportBtn">
-              <span aria-hidden="true">📄</span>
-              <span>Download PDF Report</span>
-            </button>
-            <div class="divider"></div>
-            <p class="tipText">💡 Tip: Try switching your role above to see how the report changes</p>
+            <h3 class="card__title">Share &amp; Export</h3>
+            <div class="infoText">
+              <p>Export this report to share with family, a partner, or your real estate agent.</p>
+              <p>💡 Switch role (Buyer / Investor / Agent) for a tailored narrative.</p>
+            </div>
           </div>
         </div>
       </section>
 
-      <section id="dashboard" class="screen" aria-label="Dashboard Screen">
+      <!-- DASHBOARD -->
+      <section id="screen-dashboard" class="screen" aria-label="Dashboard">
         <div class="grid">
           <div class="card">
             <h3 class="card__title">Your Dashboard</h3>
-            <p class="card__intro" id="dashSub">Your personalized hub for all your real estate activities</p>
-
+            <p class="card__intro" id="dashSub">Your personalized hub for all activities.</p>
             <div class="divider"></div>
-
+            <div class="dashStats" id="dashStats"></div>
+            <div class="divider"></div>
             <div class="grid2">
               <div class="cardSub">
-                <h4 class="cardSub__title">Today's Updates</h4>
+                <h4 class="cardSub__title">Today's Actions</h4>
                 <div class="cardSub__content" id="dashToday">—</div>
               </div>
               <div class="cardSub">
@@ -772,34 +754,110 @@
                 <div class="cardSub__content" id="dashInsights">—</div>
               </div>
             </div>
-
-            <div class="divider"></div>
-
             <div class="ctaRow">
-              <button class="btn" data-screen="search">
-                <span aria-hidden="true">🔍</span>
-                <span>Explore More Properties</span>
-              </button>
-              <button class="btn btn--primary" id="openDashInsight">
-                <span aria-hidden="true">✨</span>
-                <span>Get AI Recommendations</span>
-              </button>
+              <button class="btn" data-screen="search"><span>🔍</span><span>Explore</span></button>
+              <button class="btn btn--primary" id="openDashInsight"><span>✨</span><span>AI Recommendations</span></button>
+            </div>
+          </div>
+          <div class="card sticky">
+            <h3 class="card__title">Watchlist Summary</h3>
+            <div class="infoText" id="dashWatchlist">No saved properties yet.</div>
+            <div class="divider"></div>
+            <button class="btn" data-screen="report">View Full Report</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROFILE (new from Flutter) -->
+      <section id="screen-profile" class="screen" aria-label="Profile">
+        <div class="grid">
+          <div class="card">
+            <h3 class="card__title">Your Profile</h3>
+            <div class="profileHeader">
+              <div class="profileAvatar" id="profileAvatarBig">J</div>
+              <div>
+                <div class="profileName" id="profileName">Jane Doe</div>
+                <div class="profileEmail" id="profileEmail">demo@estateiq.com</div>
+                <span class="profileBadge">Free Plan</span>
+              </div>
+            </div>
+            <div class="divider"></div>
+            <h4 class="subsectionTitle">Your Preferences</h4>
+            <div class="prefBox">
+              <div class="prefRow"><span class="prefLabel">Role</span><span class="prefVal" id="profileRole">Buyer</span></div>
+              <div class="prefRow"><span class="prefLabel">Budget</span><span class="prefVal" id="profileBudget">$850,000</span></div>
+              <div class="prefRow"><span class="prefLabel">Priorities</span><span class="prefVal" id="profileMust">None</span></div>
+              <div class="prefRow"><span class="prefLabel">Watchlist</span><span class="prefVal" id="profileWatchCount">0 properties</span></div>
+              <div class="prefRow"><span class="prefLabel">Unread Alerts</span><span class="prefVal" id="profileAlertCount">0</span></div>
+            </div>
+            <div class="divider"></div>
+            <div class="ctaRow">
+              <button class="btn" data-screen="onboarding"><span>✏️</span><span>Edit Preferences</span></button>
+              <button class="btn" id="profileLogoutBtn"><span>↪</span><span>Sign Out</span></button>
             </div>
           </div>
 
+          <!-- Subscription card (from Flutter) -->
           <div class="card sticky">
-            <h3 class="card__title">Your Saved Properties</h3>
-            <div class="infoText" id="dashSaved">No saved properties yet</div>
-            <div class="divider"></div>
-            <button class="btn" data-screen="report">
-              <span>View Full Report</span>
-            </button>
+            <h3 class="card__title">Upgrade to Pro</h3>
+            <div class="subCard">
+              <div class="subCard__icon">🚀</div>
+              <div class="subCard__name">EstateIQ Pro</div>
+              <div class="subCard__price">$19<span>/mo</span></div>
+              <ul class="subCard__features">
+                <li>✅ Unlimited AI Insights</li>
+                <li>✅ Real-time price alerts</li>
+                <li>✅ Full market data access</li>
+                <li>✅ PDF report exports</li>
+                <li>✅ Tour scheduling</li>
+                <li>✅ Lead management (agents)</li>
+              </ul>
+              <button class="btn btn--primary btn--full" id="upgradeBtn">
+                <span>⭐</span><span>Upgrade Now</span>
+              </button>
+            </div>
           </div>
         </div>
       </section>
 
     </main>
-  </div>
+
+    <!-- MOBILE BOTTOM NAV (from Flutter) -->
+    <nav class="bottomNav" aria-label="Mobile navigation">
+      <button class="bnItem active" data-screen="home">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <span>Home</span>
+      </button>
+      <button class="bnItem" data-screen="search">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <span>Search</span>
+      </button>
+      <button class="bnItem" data-screen="dashboard">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+        </svg>
+        <span>Dashboard</span>
+      </button>
+      <button class="bnItem" data-screen="watchlist">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+        </svg>
+        <span>Watchlist</span>
+      </button>
+      <button class="bnItem" data-screen="profile">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+        </svg>
+        <span>Profile</span>
+      </button>
+    </nav>
+
+  </div><!-- /appShell -->
 
   <script src="app.js"></script>
 </body>
