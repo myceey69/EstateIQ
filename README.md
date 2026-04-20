@@ -1,3 +1,2 @@
-# Welcome to your Lovable project
-
-TODO: Document your project here
+decreased the number of sections on the left. 
+Moved the other sections to other parts of the website
