@@ -1,9 +1,15 @@
 import { Property } from '@/data/properties';
+import { getAppSetting } from '@/services/supabase';
 
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || 'api key';
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
 const GEMINI_MODEL = import.meta.env.VITE_GEMINI_MODEL || 'gemini-3-flash-preview';
 
 export async function askGemini(question: string, properties: Property[]) {
+  const apiKey = GEMINI_API_KEY || await getAppSetting('gemini_api_key');
+  if (!apiKey) {
+    throw new Error('Gemini API key is missing in Supabase app_settings.');
+  }
+
   const inventory = properties.slice(0, 12).map(p =>
     `- ${p.name}: ${p.priceLabel}, ${p.beds} bd/${p.baths} ba, ${p.sqft} sqft, risk ${p.risk}, signal ${p.signal}, cap rate ${p.capRate}%, address ${p.address}.`,
   ).join('\n');
@@ -22,7 +28,7 @@ ${question}`;
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-goog-api-key': GEMINI_API_KEY,
+      'x-goog-api-key': apiKey,
     },
     body: JSON.stringify({
       contents: [{ role: 'user', parts: [{ text: prompt }] }],
