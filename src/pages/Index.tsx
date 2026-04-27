@@ -15,6 +15,7 @@ import ReportScreen from '@/screens/ReportScreen';
 import DashboardScreen from '@/screens/DashboardScreen';
 import ArchitectureScreen from '@/screens/ArchitectureScreen';
 import ProfileScreen from '@/screens/ProfileScreen';
+import AiChatScreen from '@/screens/AiChatScreen';
 
 const SCREENS: Record<string, React.ComponentType> = {
   home: HomeScreen,
@@ -27,6 +28,7 @@ const SCREENS: Record<string, React.ComponentType> = {
   report: ReportScreen,
   dashboard: DashboardScreen,
   architecture: ArchitectureScreen,
+  ai: AiChatScreen,
   profile: ProfileScreen,
 };
 

@@ -1,4 +1,6 @@
 import { create } from 'zustand';
+import { Property } from '@/data/properties';
+import { CityLocation } from '@/data/locations';
 
 export type Role = 'buyer' | 'investor' | 'agent';
 
@@ -24,6 +26,12 @@ interface AppState {
   priceMax: number;
   minBeds: number;
   riskFilter: string;
+  selectedState: string;
+  selectedCity: CityLocation | null;
+  radiusMiles: number;
+  liveProperties: Property[];
+  listingsLoading: boolean;
+  listingsError: string | null;
   selectedId: string | null;
   watchlist: string[];
   alerts: Alert[];
@@ -51,6 +59,10 @@ interface AppState {
   setPriceMax: (v: number) => void;
   setMinBeds: (v: number) => void;
   setRiskFilter: (v: string) => void;
+  setGeoFilter: (state: string, city: CityLocation | null, radius: number) => void;
+  setLiveProperties: (properties: Property[]) => void;
+  setListingsLoading: (loading: boolean) => void;
+  setListingsError: (message: string | null) => void;
   resetFilters: () => void;
   upgradePlan: () => void;
 }
@@ -68,6 +80,12 @@ export const useAppStore = create<AppState>((set, get) => ({
   priceMax: 2000000,
   minBeds: 0,
   riskFilter: 'All',
+  selectedState: '',
+  selectedCity: null,
+  radiusMiles: 25,
+  liveProperties: [],
+  listingsLoading: false,
+  listingsError: null,
   selectedId: null,
   watchlist: [],
   alerts: [],
@@ -141,6 +159,18 @@ export const useAppStore = create<AppState>((set, get) => ({
   setPriceMax: (v) => set({ priceMax: v }),
   setMinBeds: (v) => set({ minBeds: v }),
   setRiskFilter: (v) => set({ riskFilter: v }),
-  resetFilters: () => set({ priceMin: 200000, priceMax: 2000000, minBeds: 0, riskFilter: 'All' }),
+  setGeoFilter: (selectedState, selectedCity, radiusMiles) => set({ selectedState, selectedCity, radiusMiles }),
+  setLiveProperties: (liveProperties) => set({ liveProperties }),
+  setListingsLoading: (listingsLoading) => set({ listingsLoading }),
+  setListingsError: (listingsError) => set({ listingsError }),
+  resetFilters: () => set({
+    priceMin: 200000,
+    priceMax: 2000000,
+    minBeds: 0,
+    riskFilter: 'All',
+    selectedState: '',
+    selectedCity: null,
+    radiusMiles: 25,
+  }),
   upgradePlan: () => set(s => ({ user: { ...s.user, plan: 'Pro' } })),
 }));

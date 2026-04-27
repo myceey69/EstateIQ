@@ -1,12 +1,13 @@
 import React from 'react';
 import { useAppStore, Role } from '@/store/appStore';
 import { ROLE_META } from '@/data/properties';
-import { Home, FileText, Search, BarChart3, Shield, FileOutput, LogOut } from 'lucide-react';
+import { Home, FileText, Search, BarChart3, Shield, FileOutput, LogOut, Sparkles } from 'lucide-react';
 
 const PRIMARY_NAV_ITEMS = [
   { screen: 'home', icon: Home, label: 'Welcome' },
   { screen: 'onboarding', icon: FileText, label: 'Get Started' },
   { screen: 'search', icon: Search, label: 'Find Properties' },
+  { screen: 'ai', icon: Sparkles, label: 'AI Chat' },
   { screen: 'details', icon: FileOutput, label: 'Property Details' },
   { screen: 'trends', icon: BarChart3, label: 'Market Trends' },
   { screen: 'risk', icon: Shield, label: 'Risk & ROI' },

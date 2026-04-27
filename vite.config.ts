@@ -11,6 +11,18 @@ export default defineConfig(({ mode }) => ({
     hmr: {
       overlay: false,
     },
+    proxy: {
+      "/api/rentcast": {
+        target: "https://api.rentcast.io",
+        changeOrigin: true,
+        rewrite: (p) => p.replace(/^\/api\/rentcast/, ""),
+      },
+      "/api/gemini": {
+        target: "https://generativelanguage.googleapis.com",
+        changeOrigin: true,
+        rewrite: (p) => p.replace(/^\/api\/gemini/, ""),
+      },
+    },
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {

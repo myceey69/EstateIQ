@@ -24,6 +24,9 @@ export interface Property {
   nextStep: string;
   monthlyRent: number;
   highlights: string[];
+  latitude?: number;
+  longitude?: number;
+  source?: string;
 }
 
 export const PROPERTIES: Property[] = [
@@ -41,6 +44,8 @@ export const PROPERTIES: Property[] = [
     nextStep: 'Schedule a tour — 3 competing offers expected this week.',
     monthlyRent: 4100,
     highlights: ['Below market by ~9%', 'High walk score', 'Top school district', 'Recent kitchen remodel'],
+    latitude: 37.3034,
+    longitude: -121.8991,
   },
   {
     id: 'SJ2', name: 'Downtown Modern Condo',
@@ -56,6 +61,8 @@ export const PROPERTIES: Property[] = [
     nextStep: 'Request an investment analysis report to compare with comparable rentals.',
     monthlyRent: 3800,
     highlights: ['Google campus proximity', 'Excellent transit', 'High rental demand', '18% YoY appreciation'],
+    latitude: 37.3352,
+    longitude: -121.8896,
   },
   {
     id: 'SJ3', name: 'Berryessa Duplex',
@@ -71,6 +78,8 @@ export const PROPERTIES: Property[] = [
     nextStep: 'Run cap rate analysis — current rents may be below market.',
     monthlyRent: 5800,
     highlights: ['Dual rental income', 'BART proximity', '5.5% cap rate', 'Below replacement cost'],
+    latitude: 37.3945,
+    longitude: -121.8545,
   },
   {
     id: 'SJ4', name: 'Cambrian Park Ranch',
@@ -86,6 +95,8 @@ export const PROPERTIES: Property[] = [
     nextStep: 'Low-risk portfolio anchor — strong candidate for a 1031 exchange.',
     monthlyRent: 3500,
     highlights: ['Lowest risk score', 'Top school district', 'Stable rental history', 'Freeway access'],
+    latitude: 37.2601,
+    longitude: -121.9301,
   },
   {
     id: 'SJ5', name: 'Alum Rock Emerging',
@@ -101,6 +112,8 @@ export const PROPERTIES: Property[] = [
     nextStep: 'Act before next BART extension announcement — prices expected to spike.',
     monthlyRent: 3200,
     highlights: ['Fastest growing corridor', '+22% appreciation', 'Lowest entry price', 'New transit infra'],
+    latitude: 37.3260,
+    longitude: -121.8157,
   },
   {
     id: 'SJ6', name: 'Rose Garden Victorian',
@@ -116,6 +129,8 @@ export const PROPERTIES: Property[] = [
     nextStep: 'Premium market — evaluate against comparable Victorian rentals in Naglee Park.',
     monthlyRent: 6200,
     highlights: ['Historic district premium', '5.1% cap rate', 'Fully renovated', 'Premium renter pool'],
+    latitude: 37.3337,
+    longitude: -121.9292,
   },
 ];
 
@@ -129,6 +144,7 @@ export const GUIDE_STEPS: Record<string, string> = {
   home: 'Set your role in the sidebar, then use Get Started to personalise your search.',
   onboarding: 'Set your budget and priorities so EstateIQ can rank properties for you.',
   search: 'Use signal chips to filter by opportunity type. Tap ⚙ for advanced filters.',
+  ai: 'Ask EstateIQ AI to compare listings, explain ROI, or summarize market tradeoffs.',
   details: 'Explore metrics and neighbourhood scores. Add to Watchlist for ongoing alerts.',
   trends: 'Track price appreciation, confidence, and inventory trends in your target area.',
   risk: 'Compare risk profiles and use the ROI Calculator to model investment scenarios.',

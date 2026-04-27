@@ -1,12 +1,12 @@
 import React from 'react';
 import { useAppStore } from '@/store/appStore';
-import { Home, Search, LayoutDashboard, Layers, Bookmark, User } from 'lucide-react';
+import { Home, Search, LayoutDashboard, Sparkles, Bookmark, User } from 'lucide-react';
 
 const ITEMS = [
   { screen: 'home', icon: Home, label: 'Home' },
   { screen: 'search', icon: Search, label: 'Search' },
   { screen: 'dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-  { screen: 'architecture', icon: Layers, label: 'Arch' },
+  { screen: 'ai', icon: Sparkles, label: 'AI Chat' },
   { screen: 'watchlist', icon: Bookmark, label: 'Watchlist' },
   { screen: 'profile', icon: User, label: 'Profile' },
 ];
