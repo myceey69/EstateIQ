@@ -1,6 +1,6 @@
 import { Property } from '@/data/properties';
 
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || 'AIzaSyAmeHJKW98Nx54gjSnCRqcAd4T9C4eCwAg';
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || 'api key';
 const GEMINI_MODEL = import.meta.env.VITE_GEMINI_MODEL || 'gemini-3-flash-preview';
 
 export async function askGemini(question: string, properties: Property[]) {
